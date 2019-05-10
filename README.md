@@ -44,7 +44,9 @@ php app.php
 
 It runs in dry-run mode by default so no changes will be made. If you're happy with the changes, pass in -f as an option and the app will begin the process.
 
+## Requirements
 
+PHP, PHP Curl, PHP XML
 
 ## Limitations
 
