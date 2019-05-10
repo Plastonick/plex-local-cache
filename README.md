@@ -12,9 +12,9 @@ This project assumes that there is a Plex library whose data is stored remotely 
 
 Example:
 ```bash
-REMOTEMPOINT="/media/plex"
-CACHEPOINT="/media/local-cache"
 LOCALMPOINT="/media/local"
+CACHEPOINT="/media/local-cache"
+REMOTEMPOINT="/media/plex"
 UNIONMPOINT="/media/union"
 
 unionfs-fuse -o cow $LOCALMPOINT=RW:$CACHEPOINT=RO:$REMOTEMPOINT=RO $UNIONMPOINT -o allow_other
