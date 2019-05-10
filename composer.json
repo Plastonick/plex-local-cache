@@ -1,0 +1,15 @@
+{
+    "name": "plastonick/plex-local-cache",
+    "description": "A library to help cache on-deck plex media locally using unionfs-fuse and rclone",
+    "autoload": {
+        "psr-4": {
+            "PlexLocalCache\\": "src/"
+        }
+    },
+    "require": {
+        "jc21/plex-api": "^1.2",
+        "monolog/monolog": "^1.24",
+        "ext-readline": "*",
+        "ext-json": "*"
+    }
+}
