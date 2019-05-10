@@ -2,7 +2,6 @@
 
 namespace PlexLocalCache;
 
-use function count;
 use jc21\PlexApi;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -154,8 +153,13 @@ class App
             $relativeLocation = str_replace($libraryRoot, '', $plexLocation);
             $actualLocation = str_replace($libraryRoot, $this->getConfig('tvRootDir'), $plexLocation);
 
-            $sizeOfVideo = filesize($actualLocation);
+            if (!file_exists($actualLocation)) {
+                $this->logger->critical('Unable to find video file.', ['location' => $actualLocation]);
 
+                throw new RuntimeException('Unable to find video file.');
+            }
+
+            $sizeOfVideo = filesize($actualLocation);
             $cacheLocation = str_replace($libraryRoot, $this->getConfig('cacheRootDir'), $plexLocation);
 
             // If this video is already cached, continue and remove it from the array
