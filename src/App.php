@@ -37,7 +37,7 @@ class App
         /** @var Video $videoCache */
         foreach ($toCache as $videoCache) {
             $destination = $this->getConfig('cacheRootDir') . $videoCache->getLocation();
-            $source = $this->getConfig('tvRootDir') . $videoCache->getLocation();
+            $source = $this->getConfig('plexRootDir') . $videoCache->getLocation();
             $destinationDirectory = dirname($destination);
 
             if (!file_exists($destinationDirectory)) {
@@ -139,28 +139,25 @@ class App
         $client->setToken($this->getConfig('plexToken'));
 
         $onDeckVideos = array_slice($client->getOnDeck()['Video'], 0, $this->getConfig('onDeckLimit'));
-        $librarySections = $client->getLibrarySections()['Directory'];
 
         $toCache = [];
         $cachedItems = $this->iterateDirectory($this->getConfig('cacheRootDir'), []);
         $bytesAvailable = $this->getAvailableBytes($this->getConfig('gbLimit'));
 
         foreach ($onDeckVideos as $onDeckVideo) {
-            $library = $this->getVideoLibrarySection($librarySections, $onDeckVideo);
-            $libraryRoot = $library['Location']['path'];
             $plexLocation = $onDeckVideo['Media']['Part']['file'];
 
-            $relativeLocation = str_replace($libraryRoot, '', $plexLocation);
-            $actualLocation = str_replace($libraryRoot, $this->getConfig('tvRootDir'), $plexLocation);
+            $relativeLocation = str_replace($this->getConfig('containerRootDir'), '', $plexLocation);
+            $actualLocation = str_replace($this->getConfig('containerRootDir'), $this->getConfig('plexRootDir'), $plexLocation);
 
             if (!file_exists($actualLocation)) {
                 $this->logger->critical('Unable to find video file.', ['location' => $actualLocation]);
 
-                throw new RuntimeException('Unable to find video file.');
+//                throw new RuntimeException('Unable to find video file.');
             }
 
             $sizeOfVideo = filesize($actualLocation);
-            $cacheLocation = str_replace($libraryRoot, $this->getConfig('cacheRootDir'), $plexLocation);
+            $cacheLocation = str_replace($this->getConfig('containerRootDir'), $this->getConfig('cacheRootDir'), $plexLocation);
 
             // If this video is already cached, continue and remove it from the array
             $itemKey = array_search($cacheLocation, $cachedItems);
@@ -214,7 +211,7 @@ class App
     {
         $keys = [
             'dryRun',
-            'tvRootDir',
+            'plexRootDir',
             'cacheRootDir',
             'onDeckLimit',
             'gbLimit',
