@@ -1,7 +1,8 @@
 <?php
 
 $configDefaults = [
-    'tvRootDir' => ['Television root directory? (Remotely mounted)', null],
+    'plexRootDir' => ['Plex media root directory? (Only for docker installs)', null],
+    'containerRootDir' => ['Plex media root directory within the container? (Only for docker installs)', null],
     'cacheRootDir' => ['Local cache root directory? (This directory should be empty! The program will iteratively destroy files within!)', null],
     'onDeckLimit' => ['How many on-deck items should be cached at most?', 5],
     'gbLimit' => ['How much cache can be used for on-deck video storage?', 10],
@@ -20,7 +21,7 @@ foreach ($configDefaults as $key => list($description, $defaultValue)) {
         $description .= " [{$defaultValue}]";
     }
 
-    $value = trim(readline("{$description} : "));
+    $value = trim(readline("{$description}: "));
     $config[$key] = $value ?: $defaultValue;
 }
 
