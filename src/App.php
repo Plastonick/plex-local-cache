@@ -100,13 +100,12 @@ class App
 
     private function moveFile($source, $destination)
     {
-        $this->logger->info('Copying file to local cache.', ['src' => $source, 'dest' => $destination]);
+        $tmpFile = $destination . '.tmp';
+        $this->logger->info('Copying file to local cache.', ['src' => $source, 'dest' => $tmpFile]);
 
         if ($this->isDryRun) {
             return;
         }
-
-        $tmpFile = $destination . '.tmp';
 
         if (copy($source, $tmpFile) === false) {
             $this->logger->error('Failed to copy file.', ['src' => $source, 'dest' => $tmpFile]);
@@ -118,7 +117,7 @@ class App
             $this->logger->error('Failed to move temporary file.', ['src' => $tmpFile, 'dest' => $destination]);
         }
 
-        $this->logger->info('Successfully moved file to local cache.', ['src' => $source, 'dest' => $destination]);
+        $this->logger->info('Successfully moved file to local cache.', ['src' => $tmpFile, 'dest' => $destination]);
     }
 
     private function buildLogger()
